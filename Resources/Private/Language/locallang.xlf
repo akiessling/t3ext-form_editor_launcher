@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+  <file source-language="en" datatype="plaintext" original="messages" date="2018-12-02T22:44:06Z"
+        product-name="form_editor_launcher">
+    <header/>
+    <body>
+      <trans-unit id="not_editable" xml:space="preserve">
+          <source>File %s is not editable</source>
+      </trans-unit>
+      <trans-unit id="edit_file" xml:space="preserve">
+          <source>Edit %s</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,23 @@
+{
+    "name": "andreaskiessling/form-editor-launcher",
+    "type": "typo3-cms-extension",
+    "description": "",
+    "authors": [],
+    "require": {
+        "typo3/cms-core": "^8.7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "AndreasKiessling\\FormEditorLauncher\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AndreasKiessling\\FormEditorLauncher\\Tests\\": "Tests"
+        }
+    },
+    "replace": {
+        "form_editor_launcher": "self.version",
+        "typo3-ter/form-editor-launcher": "self.version"
+    }
+}
