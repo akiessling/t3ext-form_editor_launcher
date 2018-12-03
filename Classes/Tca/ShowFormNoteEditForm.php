@@ -1,4 +1,5 @@
 <?php
+
 namespace AndreasKiessling\FormEditorLauncher\Tca;
 
 /*
@@ -20,6 +21,7 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class ShowFormNoteEditForm
@@ -35,6 +37,8 @@ class ShowFormNoteEditForm
      */
     public function showNote(array $params = null)
     {
+        $editable = false;
+
         if (!is_array($params)) {
             return '';
         }
@@ -48,58 +52,42 @@ class ShowFormNoteEditForm
             // no valid path saved, nothing to render
             if (!$formPath || empty($formPath)) {
                 return '';
-            }
-
-            // can't edit a form definition from an extension
-            if (\TYPO3\CMS\Core\Utility\StringUtility::beginsWith($formPath, 'EXT:')) {
-                return $this->renderNotEditable($formPath);
-            }
-
-            $resourceFactory = ResourceFactory::getInstance();
-            $file = $resourceFactory->retrieveFileOrFolderObject($formPath);
-
-            if (!$file->checkActionPermission('write')) {
-                return $this->renderNotEditable($formPath);
             } else {
-                $typo3UriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-                $editUri = $typo3UriBuilder->buildUriFromRoute(
-                    'web_FormFormbuilder',
-                    [
-                        'tx_form_web_formformbuilder' => [
-                            'formPersistenceIdentifier' => $formPath,
-                            'action' => 'index',
-                            'controller' => 'FormEditor',
-                        ],
-                    ]
-                );
+                $view = GeneralUtility::makeInstance(\TYPO3\CMS\Fluid\View\StandaloneView::class);
+                $view->setTemplatePathAndFilename('EXT:form_editor_launcher/Resources/Private/Templates/EditorWizard.html');
+                $view->assign('formPath', $formPath);
 
-                $onClickCode = 'top.jump(' . GeneralUtility::quoteJSvalue(
-                    $editUri
-                ) . ', \'web_FormFormbuilder\', \'web\'); return false;';
+                $resourceFactory = ResourceFactory::getInstance();
+                $file = $resourceFactory->retrieveFileOrFolderObject($formPath);
 
-                $label = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'edit_file',
-                    'form_editor_launcher',
-                    [$formPath]
-                );
-
-                $editIcon = GeneralUtility::makeInstance(IconFactory::class)->getIcon('actions-open', Icon::SIZE_SMALL);
-
-                return sprintf('<a href="#" onclick="%1$s">%2$s %3$s</a>', $onClickCode, $editIcon, $label);
+                if (!StringUtility::beginsWith($formPath, 'EXT:') && $file->checkActionPermission('write')) {
+                    $editable = true;
+                    $view->assign('onClick', $this->getOnClickCode($formPath));
+                }
             }
         }
 
-        return '';
+        $view->assign('isEditable', $editable);
+
+        return $view->render();
     }
 
-    private function renderNotEditable($formPath)
+    private function getOnClickCode($formPath)
     {
-        $icon = GeneralUtility::makeInstance(IconFactory::class)->getIcon('status-edit-read-only', Icon::SIZE_SMALL);
-        $message = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-            'not_editable',
-            'form_editor_launcher',
-            [$formPath]
+        $typo3UriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $editUri = $typo3UriBuilder->buildUriFromRoute(
+            'web_FormFormbuilder',
+            [
+                'tx_form_web_formformbuilder' => [
+                    'formPersistenceIdentifier' => $formPath,
+                    'action' => 'index',
+                    'controller' => 'FormEditor',
+                ],
+            ]
         );
-        return $icon . ' ' . $message;
+
+        return 'top.jump(' . GeneralUtility::quoteJSvalue(
+                $editUri
+            ) . ', \'web_FormFormbuilder\', \'web\'); return false;';
     }
 }
