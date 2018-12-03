@@ -16,8 +16,6 @@ namespace AndreasKiessling\FormEditorLauncher\Tca;
  */
 
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Imaging\Icon;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -54,7 +52,9 @@ class ShowFormNoteEditForm
                 return '';
             } else {
                 $view = GeneralUtility::makeInstance(\TYPO3\CMS\Fluid\View\StandaloneView::class);
-                $view->setTemplatePathAndFilename('EXT:form_editor_launcher/Resources/Private/Templates/EditorWizard.html');
+                $view->setTemplatePathAndFilename(
+                    'EXT:form_editor_launcher/Resources/Private/Templates/EditorWizard.html'
+                );
                 $view->assign('formPath', $formPath);
 
                 $resourceFactory = ResourceFactory::getInstance();
@@ -72,6 +72,11 @@ class ShowFormNoteEditForm
         return $view->render();
     }
 
+    /**
+     * @param string $formPath Path to the configured form yaml
+     * @return string
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
     private function getOnClickCode($formPath)
     {
         $typo3UriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
