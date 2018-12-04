@@ -1,6 +1,6 @@
 <?php
 
-namespace AndreasKiessling\FormEditorLauncher\Tca;
+namespace AndreasKiessling\FormEditorLauncher\Form\Element;
 
 /*
  * This file is part of the TYPO3 CMS project.
@@ -19,30 +19,26 @@ use AndreasKiessling\FormEditorLauncher\Service\EditLinkService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class ShowFormNoteEditForm
- * @package AndreasKiessling\FormEditorLauncher\Tca
- * @author Andreas Kießling
- */
-class ShowFormNoteEditForm
+class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormElement
 {
-    /**
-     * @param array|null $params
-     * @return string|null
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    public function showNote(array $params = null)
+    const NODE_NAME = 'formEditLink';
+
+    public function render()
     {
+        $result = $this->initializeResultArray();
+        $data = $this->data['databaseRow'];
         $editable = false;
 
-        if (!is_array($params)) {
+        $result['html'] = '';
+
+        if (!is_array($data)) {
             return '';
         }
 
-        $path = 'row/pi_flexform/data/sDEF/lDEF/settings.persistenceIdentifier/vDEF';
+        $path = 'pi_flexform/data/sDEF/lDEF/settings.persistenceIdentifier/vDEF';
 
-        if (ArrayUtility::isValidPath($params, $path)) {
-            $selectedForm = ArrayUtility::getValueByPath($params, $path);
+        if (ArrayUtility::isValidPath($data, $path)) {
+            $selectedForm = ArrayUtility::getValueByPath($data, $path);
             $formPath = current($selectedForm);
 
             // no valid path saved, nothing to render
@@ -61,11 +57,12 @@ class ShowFormNoteEditForm
                     $editable = true;
                     $view->assign('onClick', $linkService->getOnClickCode($formPath));
                 }
+
+                $view->assign('isEditable', $editable);
+                $result['html'] = $view->render();
             }
         }
 
-        $view->assign('isEditable', $editable);
-
-        return $view->render();
+        return $result;
     }
 }

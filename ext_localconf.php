@@ -8,5 +8,11 @@ call_user_func(
         // File list edit icons
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['fileList']['editIconsHook'][]
             = \AndreasKiessling\FormEditorLauncher\Hooks\FileListEditIconsHook::class;
+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1543956015] = [
+            'nodeName' => \AndreasKiessling\FormEditorLauncher\Form\Element\EditLinkNodeType::NODE_NAME,
+            'priority' => 40,
+            'class' => \AndreasKiessling\FormEditorLauncher\Form\Element\EditLinkNodeType::class,
+        ];
     }
 );

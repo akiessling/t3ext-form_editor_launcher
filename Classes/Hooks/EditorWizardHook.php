@@ -15,7 +15,7 @@ namespace AndreasKiessling\FormEditorLauncher\Hooks;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AndreasKiessling\FormEditorLauncher\Tca\ShowFormNoteEditForm;
+use AndreasKiessling\FormEditorLauncher\Form\Element\EditLinkNodeType;
 
 class EditorWizardHook
 {
@@ -34,7 +34,7 @@ class EditorWizardHook
                 'TCEforms' => [
                     'config' => [
                         'type' => 'user',
-                        'userFunc' => ShowFormNoteEditForm::class . '->showNote',
+                        'renderType' => EditLinkNodeType::NODE_NAME,
                     ],
                 ],
             ];
