@@ -48,8 +48,9 @@ class FileListEditIconsHook implements FileListEditIconHookInterface
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
-        if ($fileOrFolderObject->checkActionPermission('write')) {
-            $linkService = GeneralUtility::makeInstance(EditLinkService::class);
+        $linkService = GeneralUtility::makeInstance(EditLinkService::class);
+
+        if ($fileOrFolderObject->checkActionPermission('write') && $linkService->hasAccessToFormBuilder()) {
             $editOnClick = $linkService->getOnClickCode($fileOrFolderObject->getCombinedIdentifier());
 
             $label = $GLOBALS['LANG']->sL(

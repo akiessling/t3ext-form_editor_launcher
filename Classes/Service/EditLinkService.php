@@ -65,8 +65,23 @@ class EditLinkService
             return false;
         }
 
-        // TODO: check access to form module
+        if (!isset($GLOBALS['TBE_MODULES']['_configuration']['web_FormFormbuilder'])) {
+            return false;
+        }
 
+        return $this->hasAccessToFormBuilder();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAccessToFormBuilder()
+    {
+        try {
+            $GLOBALS['BE_USER']->modAccess($GLOBALS['TBE_MODULES']['_configuration']['web_FormFormbuilder']);
+        } catch (\Exception $e) {
+            return false;
+        }
         return true;
     }
 }
