@@ -10,6 +10,9 @@
       <trans-unit id="edit_file" xml:space="preserve">
           <source>Edit %s</source>
       </trans-unit>
+      <trans-unit id="open_in_forms_module" xml:space="preserve">
+          <source>Edit in form builder</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

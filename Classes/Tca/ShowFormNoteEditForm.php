@@ -15,11 +15,9 @@ namespace AndreasKiessling\FormEditorLauncher\Tca;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Resource\ResourceFactory;
+use AndreasKiessling\FormEditorLauncher\Service\EditLinkService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Class ShowFormNoteEditForm
@@ -57,12 +55,11 @@ class ShowFormNoteEditForm
                 );
                 $view->assign('formPath', $formPath);
 
-                $resourceFactory = ResourceFactory::getInstance();
-                $file = $resourceFactory->retrieveFileOrFolderObject($formPath);
+                $linkService = GeneralUtility::makeInstance(EditLinkService::class);
 
-                if (!StringUtility::beginsWith($formPath, 'EXT:') && $file->checkActionPermission('write')) {
+                if ($linkService->isEditable($formPath)) {
                     $editable = true;
-                    $view->assign('onClick', $this->getOnClickCode($formPath));
+                    $view->assign('onClick', $linkService->getOnClickCode($formPath));
                 }
             }
         }
@@ -70,29 +67,5 @@ class ShowFormNoteEditForm
         $view->assign('isEditable', $editable);
 
         return $view->render();
-    }
-
-    /**
-     * @param string $formPath Path to the configured form yaml
-     * @return string
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
-     */
-    private function getOnClickCode($formPath)
-    {
-        $typo3UriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $editUri = $typo3UriBuilder->buildUriFromRoute(
-            'web_FormFormbuilder',
-            [
-                'tx_form_web_formformbuilder' => [
-                    'formPersistenceIdentifier' => $formPath,
-                    'action' => 'index',
-                    'controller' => 'FormEditor',
-                ],
-            ]
-        );
-
-        return 'top.jump(' . GeneralUtility::quoteJSvalue(
-                $editUri
-            ) . ', \'web_FormFormbuilder\', \'web\'); return false;';
     }
 }
