@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Filelist\FileListEditIconHookInterface;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManager;
 
@@ -48,9 +49,13 @@ class FileListEditIconsHook implements FileListEditIconHookInterface
 
         $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
 
-        $linkService = GeneralUtility::makeInstance(EditLinkService::class);
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $linkService = $objectManager->get(EditLinkService::class);
 
-        if ($fileOrFolderObject->checkActionPermission('write') && $linkService->hasAccessToFormBuilder()) {
+        if ($linkService->isInWritableMount($fileOrFolderObject)
+            && $fileOrFolderObject->checkActionPermission('write')
+            && $linkService->hasAccessToFormBuilder()) {
+
             $editOnClick = $linkService->getOnClickCode($fileOrFolderObject->getCombinedIdentifier());
 
             $label = $GLOBALS['LANG']->sL(

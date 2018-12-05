@@ -16,16 +16,32 @@ namespace AndreasKiessling\FormEditorLauncher\Service;
  */
 
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
-class EditLinkService
+class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
 {
+    /**
+     * @var \TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManagerInterface
+     */
+    protected $formPersistenceManager;
+
+    /**
+     * @var array
+     */
+    protected $storageFolders;
+
+    public function __construct(\TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManagerInterface $formPersistenceManager)
+    {
+        $this->formPersistenceManager = $formPersistenceManager;
+        $this->storageFolders = $this->formPersistenceManager->getAccessibleFormStorageFolders();
+    }
+
     /**
      * @param string $formPath Path to the configured form yaml
      * @return string
-     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
      */
     public function getOnClickCode($formPath)
     {
@@ -69,7 +85,22 @@ class EditLinkService
             return false;
         }
 
+        if (!$this->isInWritableMount($file)) {
+            return false;
+        }
+
         return $this->hasAccessToFormBuilder();
+    }
+
+    /**
+     * Validates, if a file is in a configured form storage folder
+     *
+     * @param \TYPO3\CMS\Core\Resource\File $file
+     * @return bool
+     */
+    public function isInWritableMount(File $file)
+    {
+        return in_array($file->getParentFolder(), $this->storageFolders);
     }
 
     /**

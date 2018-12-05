@@ -18,6 +18,7 @@ namespace AndreasKiessling\FormEditorLauncher\Form\Element;
 use AndreasKiessling\FormEditorLauncher\Service\EditLinkService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormElement
 {
@@ -51,7 +52,8 @@ class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormEleme
                 );
                 $view->assign('formPath', $formPath);
 
-                $linkService = GeneralUtility::makeInstance(EditLinkService::class);
+                $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+                $linkService = $objectManager->get(EditLinkService::class);
 
                 if ($linkService->isEditable($formPath)) {
                     $editable = true;
