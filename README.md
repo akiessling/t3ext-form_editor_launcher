@@ -15,3 +15,17 @@ The form extension hooks into the list module and deactivates all editing functi
 This extension runs a hook afterwards and replaces the missing edit button with a link to the form builder.
 
 ![List mode](Documentation/Images/list-mode.png "List mode")
+
+# Installation
+
+Clone to typo3conf/ext/form_editor_launcher
+```
+git clone https://github.com/akiessling/t3ext-form_editor_launcher.git
+```
+
+or use composer
+
+``` 
+composer config repositories vcs https://github.com/akiessling/t3ext-form_editor_launcher.git
+composer require andreaskiessling/form-editor-launcher:dev-master
+```
