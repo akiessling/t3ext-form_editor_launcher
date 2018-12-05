@@ -5,6 +5,7 @@ This extension enhances the TYPO3 backend to launch the form editing interface d
 ## Plugin mode
 
 The extension hooks into the flexform rendering and uses the saved value of the plugin to generate a link to the form builder.
+
 ![Plugin mode](Documentation/Images/plugin-mode.png "Plugin mode")
   
   
