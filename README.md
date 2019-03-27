@@ -26,6 +26,6 @@ git clone https://github.com/akiessling/t3ext-form_editor_launcher.git
 or use composer
 
 ``` 
-composer config repositories vcs https://github.com/akiessling/t3ext-form_editor_launcher.git
+composer config repositories.form-editor-launcher vcs https://github.com/akiessling/t3ext-form_editor_launcher.git
 composer require andreaskiessling/form-editor-launcher:dev-master
 ```
