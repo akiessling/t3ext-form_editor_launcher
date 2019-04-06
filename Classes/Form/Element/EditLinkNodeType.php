@@ -28,7 +28,6 @@ class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormEleme
     {
         $result = $this->initializeResultArray();
         $data = $this->data['databaseRow'];
-        $editable = false;
 
         $result['html'] = '';
 
@@ -45,24 +44,10 @@ class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormEleme
             // no valid path saved, nothing to render
             if (!$formPath || empty($formPath)) {
                 return '';
-            } else {
-                $view = GeneralUtility::makeInstance(\TYPO3\CMS\Fluid\View\StandaloneView::class);
-                $view->setTemplatePathAndFilename(
-                    'EXT:form_editor_launcher/Resources/Private/Templates/EditorWizard.html'
-                );
-                $view->assign('formPath', $formPath);
-
-                $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-                $linkService = $objectManager->get(EditLinkService::class);
-
-                if ($linkService->isEditable($formPath)) {
-                    $editable = true;
-                    $view->assign('onClick', $linkService->getOnClickCode($formPath));
-                }
-
-                $view->assign('isEditable', $editable);
-                $result['html'] = $view->render();
             }
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+            $linkService = $objectManager->get(EditLinkService::class);
+            $result['html'] = $linkService->renderLink($formPath);
         }
 
         return $result;

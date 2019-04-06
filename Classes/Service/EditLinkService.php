@@ -20,9 +20,11 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
 {
+    const TEMPLATE_PATH = 'EXT:form_editor_launcher/Resources/Private/Templates/EditorWizard.html';
     /**
      * @var \TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManagerInterface
      */
@@ -114,5 +116,30 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
             return false;
         }
         return true;
+    }
+
+    /**
+     * Main entrypoint to render the edit link
+     *
+     * @param string $formPath
+     * @return string
+     */
+    public function renderLink(string $formPath)
+    {
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(
+            self::TEMPLATE_PATH
+        );
+        $view->assign('formPath', $formPath);
+
+        $editable = false;
+        if ($this->isEditable($formPath)) {
+            $editable = true;
+            $view->assign('onClick', $this->getOnClickCode($formPath));
+        }
+
+        $view->assign('isEditable', $editable);
+
+        return $view->render();
     }
 }

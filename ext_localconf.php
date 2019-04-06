@@ -14,5 +14,7 @@ call_user_func(
             'priority' => 40,
             'class' => \AndreasKiessling\FormEditorLauncher\Form\Element\EditLinkNodeType::class,
         ];
+
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem'][] = \AndreasKiessling\FormEditorLauncher\Hooks\TtContentDrawItemHook::class;
     }
 );
