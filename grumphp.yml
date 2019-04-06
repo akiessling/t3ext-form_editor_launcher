@@ -1,0 +1,2 @@
+imports:
+  - { resource: .Build/vendor/andreaskiessling/grumphp-conventions-typo3/grumphp.yml }

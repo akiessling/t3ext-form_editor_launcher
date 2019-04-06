@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace AndreasKiessling\FormEditorLauncher\Hooks;
 
@@ -27,8 +27,7 @@ class EditorWizardHook
     public function parseDataStructureByIdentifierPostProcess(
         $dataStructure,
         $identifier
-    )
-    {
+    ) {
         if (isset($identifier['ext-form-persistenceIdentifier'])) {
             $dataStructure['sheets']['sDEF']['ROOT']['el']['settings.editForm'] = [
                 'TCEforms' => [

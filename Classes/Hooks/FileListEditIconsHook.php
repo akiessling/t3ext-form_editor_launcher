@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace AndreasKiessling\FormEditorLauncher\Hooks;
 
@@ -34,9 +34,11 @@ class FileListEditIconsHook implements FileListEditIconHookInterface
     public function manipulateEditIcons(&$cells, &$parentObject)
     {
         $fileOrFolderObject = $cells['__fileOrFolderObject'];
+
         if (!$fileOrFolderObject instanceof \TYPO3\CMS\Core\Resource\File) {
             return;
         }
+
         $fullIdentifier = $fileOrFolderObject->getCombinedIdentifier();
         $isFormDefinition = StringUtility::endsWith(
             $fullIdentifier,
@@ -55,7 +57,6 @@ class FileListEditIconsHook implements FileListEditIconHookInterface
         if ($linkService->isInWritableMount($fileOrFolderObject)
             && $fileOrFolderObject->checkActionPermission('write')
             && $linkService->hasAccessToFormBuilder()) {
-
             $editOnClick = $linkService->getOnClickCode($fileOrFolderObject->getCombinedIdentifier());
 
             $label = $GLOBALS['LANG']->sL(
@@ -63,9 +64,9 @@ class FileListEditIconsHook implements FileListEditIconHookInterface
             );
             $icon = $iconFactory->getIcon('content-form', Icon::SIZE_SMALL)->render();
 
-            $cells['edit'] = '<a href="#" class="btn btn-default" onclick="' . htmlspecialchars(
-                    $editOnClick
-                ) . '" title="' . $label . '">' . $icon . '</a>';
+            $cells['edit'] = '<a href="#" class="btn btn-default" onclick="' . \htmlspecialchars(
+                $editOnClick
+            ) . '" title="' . $label . '">' . $icon . '</a>';
         }
     }
 }

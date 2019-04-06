@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace AndreasKiessling\FormEditorLauncher\Form\Element;
 
@@ -31,7 +31,7 @@ class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormEleme
 
         $result['html'] = '';
 
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             return '';
         }
 
@@ -39,12 +39,13 @@ class EditLinkNodeType extends \TYPO3\CMS\Backend\Form\Element\AbstractFormEleme
 
         if (ArrayUtility::isValidPath($data, $path)) {
             $selectedForm = ArrayUtility::getValueByPath($data, $path);
-            $formPath = current($selectedForm);
+            $formPath = \current($selectedForm);
 
             // no valid path saved, nothing to render
             if (!$formPath || empty($formPath)) {
                 return '';
             }
+
             $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
             $linkService = $objectManager->get(EditLinkService::class);
             $result['html'] = $linkService->renderLink($formPath);

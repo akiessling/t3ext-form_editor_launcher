@@ -1,8 +1,6 @@
-<?php
-
+<?php declare(strict_types = 1);
 
 namespace AndreasKiessling\FormEditorLauncher\Hooks;
-
 
 use AndreasKiessling\FormEditorLauncher\Service\EditLinkService;
 use TYPO3\CMS\Backend\View\PageLayoutView;
@@ -30,7 +28,5 @@ class TtContentDrawItemHook implements PageLayoutViewDrawItemHookInterface
                 \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($e->getMessage());
             }
         }
-
     }
-
 }

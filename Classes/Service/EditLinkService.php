@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace AndreasKiessling\FormEditorLauncher\Service;
 
@@ -50,7 +50,8 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
         $typo3UriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
 
         $method = 'buildUriFromModule';
-        if (version_compare(TYPO3_branch, '9.3', '>=')) {
+
+        if (\version_compare(\TYPO3_branch, '9.3', '>=')) {
             $method = 'buildUriFromRoute';
         }
 
@@ -66,8 +67,8 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
         );
 
         return 'top.jump(' . GeneralUtility::quoteJSvalue(
-                $editUri
-            ) . ', \'web_FormFormbuilder\', \'web\'); return false;';
+            $editUri
+        ) . ', \'web_FormFormbuilder\', \'web\'); return false;';
     }
 
     public function isEditable($formPath)
@@ -102,7 +103,7 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function isInWritableMount(File $file)
     {
-        return in_array($file->getParentFolder(), $this->storageFolders);
+        return \in_array($file->getParentFolder(), $this->storageFolders);
     }
 
     /**
@@ -112,9 +113,10 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
     {
         try {
             $GLOBALS['BE_USER']->modAccess($GLOBALS['TBE_MODULES']['_configuration']['web_FormFormbuilder']);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
+
         return true;
     }
 
@@ -133,6 +135,7 @@ class EditLinkService implements \TYPO3\CMS\Core\SingletonInterface
         $view->assign('formPath', $formPath);
 
         $editable = false;
+
         if ($this->isEditable($formPath)) {
             $editable = true;
             $view->assign('onClick', $this->getOnClickCode($formPath));
